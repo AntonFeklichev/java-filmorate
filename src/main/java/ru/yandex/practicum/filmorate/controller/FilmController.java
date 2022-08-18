@@ -5,12 +5,13 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import static ru.yandex.practicum.filmorate.validator.IdForUpdatingValidator.validateIdForUpdating;
 
 @RestController
 @RequestMapping("/films")
@@ -44,12 +45,9 @@ public class FilmController {
 
     @PutMapping
     public Film updateFilm(@Valid @RequestBody Film film) {
-        if (films.containsKey(film.getId())) {
-            films.put(film.getId(), film);
-            log.info("{} was updated", film);
-        } else {
-            throw new ValidationException("Invalid film id for updating");
-        }
+        validateIdForUpdating(film.getId(), films.keySet());
+        films.put(film.getId(), film);
+        log.info("{} was updated", film);
         return film;
     }
 
