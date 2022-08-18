@@ -22,6 +22,7 @@ public class UserController {
     @PostMapping
     public User createUser(@Valid @RequestBody User user) {
         addNewUser(user);
+        log.info("{} was added", user);
         return user;
     }
 
@@ -34,12 +35,16 @@ public class UserController {
     private void generateAndSetId(User user) {
         user.setId(idForNewUsers);
         idForNewUsers++;
+        log.trace("id = {} was generated", user.getId());
     }
 
     private void setNameToLoginIfNameIsEmpty(User user) {
         String name = user.getName();
         String login = user.getLogin();
-        if (name.isBlank()) user.setName(login);
+        if (name.isBlank()) {
+            user.setName(login);
+            log.trace("name was blank so login was used as name");
+        }
     }
 
     @GetMapping
@@ -52,6 +57,7 @@ public class UserController {
         setNameToLoginIfNameIsEmpty(user);
         validateIdForUpdating(user.getId(), users.keySet());
         users.put(user.getId(), user);
+        log.info("{} was updated");
         return user;
     }
 
