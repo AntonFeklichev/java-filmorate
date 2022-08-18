@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.validator;
 
-import javax.validation.ValidationException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
+
 import java.util.Collection;
 
 public class IdForUpdatingValidator {

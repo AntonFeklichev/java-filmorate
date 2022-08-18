@@ -21,6 +21,13 @@ public class FilmController {
     private Map<Integer, Film> films = new HashMap<>();
     private int idForNewFilms = 1;
 
+    @PostMapping
+    public Film createFilm(@Valid @RequestBody Film film) {
+        addNewFilm(film);
+        log.info("{} was added", film);
+        return film;
+    }
+
     private void addNewFilm(Film film) {
         generateAndSetId(film);
         films.put(film.getId(), film);
@@ -29,6 +36,7 @@ public class FilmController {
     private void generateAndSetId(Film film) {
         film.setId(idForNewFilms);
         idForNewFilms++;
+        log.debug("id = {} was generated", film.getId());
     }
 
     @GetMapping
@@ -36,12 +44,6 @@ public class FilmController {
         return films.values();
     }
 
-    @PostMapping
-    public Film createFilm(@Valid @RequestBody Film film) {
-        addNewFilm(film);
-        log.info("{} was added", film);
-        return film;
-    }
 
     @PutMapping
     public Film updateFilm(@Valid @RequestBody Film film) {
@@ -50,5 +52,4 @@ public class FilmController {
         log.info("{} was updated", film);
         return film;
     }
-
 }

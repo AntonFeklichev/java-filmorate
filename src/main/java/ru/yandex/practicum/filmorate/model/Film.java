@@ -10,9 +10,7 @@ import java.time.LocalDate;
 
 @Data
 public class Film {
-
     private int id;
-
     @NotBlank(message = "Film name should not be blank")
     private String name;
     @Size(max = 200, message = "Film description length should be less than 200 characters long")
