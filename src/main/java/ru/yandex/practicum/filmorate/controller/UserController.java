@@ -5,8 +5,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static ru.yandex.practicum.filmorate.validator.IdForUpdatingValidator.validateIdForUpdating;
@@ -48,8 +49,8 @@ public class UserController {
     }
 
     @GetMapping
-    public Collection<User> getUsers() {
-        return users.values();
+    public List<User> getUsers() {
+        return new ArrayList<User>(users.values());
     }
 
     @PutMapping

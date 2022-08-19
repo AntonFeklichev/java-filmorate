@@ -7,8 +7,9 @@ import ru.yandex.practicum.filmorate.model.Film;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static ru.yandex.practicum.filmorate.validator.IdForUpdatingValidator.validateIdForUpdating;
@@ -40,8 +41,8 @@ public class FilmController {
     }
 
     @GetMapping
-    public Collection<Film> getFilms() {
-        return films.values();
+    public List<Film> getFilms() {
+        return new ArrayList<Film>(films.values());
     }
 
 
