@@ -1,65 +1,43 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static ru.yandex.practicum.filmorate.validator.IdForUpdatingValidator.validateIdForUpdating;
 
 @RestController
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
-    private Map<Integer, User> users = new HashMap<>();
+    private final UserService userService;
 
-    private int idForNewUsers = 1;
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping
     public User createUser(@Valid @RequestBody User user) {
-        addNewUser(user);
-        log.info("{} was added", user);
-        return user;
-    }
-
-    private void addNewUser(User user) {
-        generateAndSetId(user);
-        setNameToLoginIfNameIsEmpty(user);
-        users.put(user.getId(), user);
-    }
-
-    private void generateAndSetId(User user) {
-        user.setId(idForNewUsers);
-        idForNewUsers++;
-        log.trace("id = {} was generated", user.getId());
-    }
-
-    private void setNameToLoginIfNameIsEmpty(User user) {
-        String name = user.getName();
-        String login = user.getLogin();
-        if (name.isBlank()) {
-            user.setName(login);
-            log.trace("name was blank so login was used as name");
-        }
+        return userService.addUser(user);
     }
 
     @GetMapping
     public List<User> getUsers() {
-        return new ArrayList<User>(users.values());
+        return userService.getUsers();
     }
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
-        setNameToLoginIfNameIsEmpty(user);
-        validateIdForUpdating(user.getId(), users.keySet());
-        users.put(user.getId(), user);
-        log.info("{} was updated");
-        return user;
+        return userService.updateUser(user);
+    }
+    
+    @DeleteMapping
+    public User deleteUser(@Valid @RequestBody User user) {
+        return userService.deleteUser(user);
     }
 
 }

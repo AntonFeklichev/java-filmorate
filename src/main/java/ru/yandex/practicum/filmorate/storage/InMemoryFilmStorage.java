@@ -14,8 +14,8 @@ import static ru.yandex.practicum.filmorate.validator.IdForUpdatingValidator.val
 @Slf4j
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
-    private Map<Integer, Film> films = new HashMap<>();
     private static int idForNewFilms = 1;
+    private Map<Integer, Film> films = new HashMap<>();
 
     @Override
     public Film addFilm(Film film) {
@@ -34,6 +34,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film deleteFilm(Film film) {
         films.remove(film.getId());
+        log.info("{} was removed", film);
         return film;
     }
 
