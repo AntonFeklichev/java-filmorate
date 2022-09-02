@@ -18,7 +18,7 @@ public class UserControllerTest {
 
     @BeforeEach
     public void init() {
-        userController = new UserController();
+//        userController = new UserController();
         user = User.builder().id(1).name("vasya").birthday(LocalDate.of(1990, Month.JULY, 11)).email("vasya@yandex.ru").login("vasya_pro").build();
     }
 
