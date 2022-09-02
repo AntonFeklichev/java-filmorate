@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -19,7 +21,7 @@ public class FilmControllerTest {
 
     @BeforeEach
     public void init() {
-        filmController = new FilmController();
+//        filmController = new FilmController();
         film = Film.builder().id(1).name("men in black").description("men in black desc").releaseDate(LocalDate.of(2010, Month.APRIL, 1)).duration(100).build();
     }
 
