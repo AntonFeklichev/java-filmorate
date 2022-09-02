@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static ru.yandex.practicum.filmorate.validator.IdForUpdatingValidator.validateIdForUpdating;
 
@@ -60,5 +61,39 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public List<User> getUsers() {
         return new ArrayList<User>(users.values());
+    }
+
+    @Override
+    public User getUserById(int id) {
+        return users.get(id);
+    }
+
+    @Override
+    public User addFriend(User user, User friend) {
+        user.getFriends().add(friend);
+        friend.getFriends().add(user);
+        log.info("{} and {} are now friends", user, friend);
+        return friend;
+    }
+
+    @Override
+    public User removeFriend(User user, User friend) {
+        user.getFriends().remove(friend);
+        friend.getFriends().remove(user);
+        return friend;
+    }
+
+    @Override
+    public List<User> getFriendsOf(User user) {
+        return users.get(user.getId()).getFriends();
+    }
+
+    @Override
+    public List<User> getCommonFriendsOf(User user1, User user2) {
+        List<User> friendsOfUser1 = getFriendsOf(user1);
+        List<User> friendsOfUser2 = getFriendsOf(user2);
+        List<User> commonFriends = friendsOfUser1.stream().filter(friendOfUser1 -> friendsOfUser2.contains(friendOfUser1)).collect(Collectors.toList());
+        return commonFriends;
+
     }
 }
