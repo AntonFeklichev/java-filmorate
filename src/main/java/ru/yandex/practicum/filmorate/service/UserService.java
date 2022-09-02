@@ -31,4 +31,24 @@ public class UserService {
     public List<User> getUsers() {
         return userStorage.getUsers();
     }
+
+    public User getUserById(int id) {
+        return userStorage.getUserById(id);
+    }
+
+    public User addFriend(User user, User friend) {
+        return userStorage.addFriend(user, friend);
+    }
+
+    public User removeFriend(User user, User friend) {
+        return userStorage.removeFriend(user, friend);
+    }
+
+    public List<User> getFriendsOf(User user) {
+        return userStorage.getFriendsOf(user);
+    }
+
+    public List<User> getCommonFriendsOf(User user1, User user2) {
+        return userStorage.getCommonFriendsOf(user1, user2);
+    }
 }
