@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -21,5 +23,7 @@ public class User {
     private String name;
     @Past
     private LocalDate birthday;
+    @ToString.Exclude
+    @JsonIgnore
     private List<User> friends;
 }
