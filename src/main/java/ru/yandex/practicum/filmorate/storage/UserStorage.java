@@ -7,7 +7,7 @@ import java.util.List;
 public interface UserStorage {
     User addUser(User user);
 
-    User deleteUser(User user);
+    User removeUserById(int userId);
 
     User updateUser(User user);
 
@@ -15,11 +15,11 @@ public interface UserStorage {
 
     User getUserById(int id);
 
-    User addFriend(User user, User Friend);
+    User addFriend(int userId, int friendId);
 
-    User removeFriend(User user, User friend);
+    User removeFriend(int userId, int friendId);
 
-    List<User> getFriendsOf(User user);
+    List<User> getFriendsOfUserById(int userId);
 
-    List<User> getCommonFriendsOf(User user1, User user2);
+    List<User> getCommonFriendsOf(int user1Id, int user2Id);
 }

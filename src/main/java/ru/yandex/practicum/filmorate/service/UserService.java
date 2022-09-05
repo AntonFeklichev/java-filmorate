@@ -24,8 +24,8 @@ public class UserService {
         return userStorage.updateUser(user);
     }
 
-    public User deleteUser(User user) {
-        return userStorage.deleteUser(user);
+    public User removeUserById(int userId) {
+        return userStorage.removeUserById(userId);
     }
 
     public List<User> getUsers() {
@@ -36,19 +36,19 @@ public class UserService {
         return userStorage.getUserById(id);
     }
 
-    public User addFriend(User user, User friend) {
-        return userStorage.addFriend(user, friend);
+    public User addFriend(int userId, int friendId) {
+        return userStorage.addFriend(userId, friendId);
     }
 
-    public User removeFriend(User user, User friend) {
-        return userStorage.removeFriend(user, friend);
+    public User removeFriend(int userId, int friendId) {
+        return userStorage.removeFriend(userId, friendId);
     }
 
-    public List<User> getFriendsOf(User user) {
-        return userStorage.getFriendsOf(user);
+    public List<User> getFriendsOfUserById(int userId) {
+        return userStorage.getFriendsOfUserById(userId);
     }
 
-    public List<User> getCommonFriendsOf(User user1, User user2) {
-        return userStorage.getCommonFriendsOf(user1, user2);
+    public List<User> getCommonFriendsOf(int user1Id, int user2Id) {
+        return userStorage.getCommonFriendsOf(user1Id, user2Id);
     }
 }
