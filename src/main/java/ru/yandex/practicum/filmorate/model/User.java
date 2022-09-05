@@ -9,7 +9,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder(toBuilder = true)
@@ -25,5 +25,5 @@ public class User {
     private LocalDate birthday;
     @ToString.Exclude
     @JsonIgnore
-    private List<User> friends;
+    private Set<Integer> friendsId;
 }
