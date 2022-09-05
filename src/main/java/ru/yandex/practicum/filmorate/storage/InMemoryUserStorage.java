@@ -7,7 +7,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static ru.yandex.practicum.filmorate.validator.IdForUpdatingValidator.validateIdForUpdating;
+import static ru.yandex.practicum.filmorate.validator.IdValidator.validateUserId;
 
 @Slf4j
 @Component
@@ -41,13 +41,14 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     private void setEmptyFriendsIfNull(User user) {
-        if (user.getFriends() == null) {
-            user.setFriends(new ArrayList<>(List.of()));
+        if (user.getFriendsId() == null) {
+            user.setFriendsId(new HashSet<>(Set.of()));
         }
     }
 
     @Override
     public User removeUserById(int userId) {
+        validateUserId(userId, users.keySet());
         User removedUser = users.remove(userId);
         log.info("{} was removed", removedUser);
         return removedUser;
@@ -55,9 +56,9 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User updateUser(User user) {
+        validateUserId(user.getId(), users.keySet());
         setNameToLoginIfNameIsEmpty(user);
         setEmptyFriendsIfNull(user);
-        validateIdForUpdating(user.getId(), users.keySet());
         users.put(user.getId(), user);
         log.info("{} was updated", user);
         return user;
@@ -70,37 +71,45 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User getUserById(int id) {
+        validateUserId(id, users.keySet());
         return users.get(id);
     }
 
     @Override
-    public User addFriend(int userId, int friendId) {
+    public void addFriend(int userId, int friendId) {
+        validateUserId(userId, users.keySet());
+        validateUserId(friendId, users.keySet());
         User user = getUserById(userId);
         User friend = getUserById(friendId);
-        user.getFriends().add(friend);
+        user.getFriendsId().add(friendId);
         log.info("{} is now friend of {}", friend, user);
-        friend.getFriends().add(user);
+        friend.getFriendsId().add(userId);
         log.info("{} is now friend of {}", user, friend);
-        log.info("{} and {} are now friends of each other", user, friend);
-        return null;
     }
 
     @Override
     public User removeFriend(int userId, int friendId) {
+        validateUserId(userId, users.keySet());
+        validateUserId(friendId, users.keySet());
         User user = getUserById(userId);
         User friend = getUserById(friendId);
-        user.getFriends().remove(friend);
-        friend.getFriends().remove(user);
+        user.getFriendsId().remove(friendId);
+        friend.getFriendsId().remove(userId);
         return friend;
     }
 
     @Override
     public List<User> getFriendsOfUserById(int userId) {
-        return getUserById(userId).getFriends();
+        validateUserId(userId, users.keySet());
+        User user = getUserById(userId);
+        List<User> friends = user.getFriendsId().stream().map(id -> getUserById(Math.toIntExact(id))).collect(Collectors.toList());
+        return friends;
     }
 
     @Override
     public List<User> getCommonFriendsOf(int user1Id, int user2Id) {
+        validateUserId(user1Id, users.keySet());
+        validateUserId(user2Id, users.keySet());
         List<User> friendsOfUser1 = getFriendsOfUserById(user1Id);
         List<User> friendsOfUser2 = getFriendsOfUserById(user2Id);
         List<User> commonFriends = friendsOfUser1.stream().filter(friendOfUser1 -> friendsOfUser2.contains(friendOfUser1)).collect(Collectors.toList());

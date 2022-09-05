@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static ru.yandex.practicum.filmorate.validator.IdForUpdatingValidator.validateIdForUpdating;
+import static ru.yandex.practicum.filmorate.validator.IdValidator.validateUserId;
 
 @Slf4j
 @Component
@@ -40,7 +40,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film updateFilm(Film film) {
-        validateIdForUpdating(film.getId(), films.keySet());
+        validateUserId(film.getId(), films.keySet());
         films.put(film.getId(), film);
         log.info("{} was updated", film);
         return film;
