@@ -43,4 +43,8 @@ public class FilmService {
     public void deleteLikeOfFilm(int filmId, int userId) {
         filmStorage.deleteLikeOfFilm(filmId, userId);
     }
+
+    public List<Film> getPopularFilms(int count) {
+        return filmStorage.getPopularFilms(count);
+    }
 }

@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ru.yandex.practicum.filmorate.validator.IdValidator.validateFilmId;
 
@@ -17,6 +18,7 @@ import static ru.yandex.practicum.filmorate.validator.IdValidator.validateFilmId
 public class InMemoryFilmStorage implements FilmStorage {
     private static int idForNewFilms = 1;
     private final UserStorage userStorage;
+    Comparator<Film> likesDescendingComparator = (film1, film2) -> -(film1.getLikedUsersId().size() - film2.getLikedUsersId().size());
     private Map<Integer, Film> films = new HashMap<>();
 
     @Autowired
@@ -43,7 +45,6 @@ public class InMemoryFilmStorage implements FilmStorage {
         film.setId(idForNewFilms++);
         log.debug("id = {} was generated", film.getId());
     }
-
 
     @Override
     public Film deleteFilm(Film film) {
@@ -88,5 +89,8 @@ public class InMemoryFilmStorage implements FilmStorage {
         user.getLikedFilmsId().remove(filmId);
     }
 
-
+    @Override
+    public List<Film> getPopularFilms(int count) {
+        return films.values().stream().sorted(likesDescendingComparator).limit(count).collect(Collectors.toList());
+    }
 }
