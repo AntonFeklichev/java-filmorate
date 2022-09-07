@@ -27,9 +27,16 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film addFilm(Film film) {
         generateAndSetId(film);
+        setEmptyLikedUsersIfNull(film);
         films.put(film.getId(), film);
         log.info("{} was added", film);
         return film;
+    }
+
+    private void setEmptyLikedUsersIfNull(Film film) {
+        if (film.getLikedUsersId() == null) {
+            film.setLikedUsersId(new HashSet<>(Set.of()));
+        }
     }
 
     private void generateAndSetId(Film film) {
@@ -48,6 +55,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film updateFilm(Film film) throws UnknownFilmException {
         validateFilmId(film.getId(), films.keySet());
+        setEmptyLikedUsersIfNull(film);
         films.put(film.getId(), film);
         log.info("{} was updated", film);
         return film;
@@ -68,22 +76,17 @@ public class InMemoryFilmStorage implements FilmStorage {
     public void likeFilm(int filmId, int userId) throws UnknownFilmException, UnknownUserException {
         Film film = getFilmById(filmId);
         User user = userStorage.getUserById(userId);
-        setEmptyLikedUsersIfNull(film);
-        setEmptyLikedFilmsIfNull(user);
         film.getLikedUsersId().add(userId);
         user.getLikedFilmsId().add(filmId);
     }
 
-    private void setEmptyLikedFilmsIfNull(User user) {
-        if (user.getLikedFilmsId() == null) {
-            user.setLikedFilmsId(new HashSet<>(Set.of()));
-        }
+    @Override
+    public void deleteLikeOfFilm(int filmId, int userId) throws UnknownFilmException, UnknownUserException {
+        Film film = getFilmById(filmId);
+        User user = userStorage.getUserById(userId);
+        film.getLikedUsersId().remove(userId);
+        user.getLikedFilmsId().remove(filmId);
     }
 
-    private void setEmptyLikedUsersIfNull(Film film) {
-        if (film.getLikedUsersId() == null) {
-            film.setLikedUsersId(new HashSet<>(Set.of()));
-        }
-    }
 
 }

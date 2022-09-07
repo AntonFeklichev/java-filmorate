@@ -39,4 +39,8 @@ public class FilmService {
     public void likeFilm(int filmId, int userId) {
         filmStorage.likeFilm(filmId, userId);
     }
+
+    public void deleteLikeOfFilm(int filmId, int userId) {
+        filmStorage.deleteLikeOfFilm(filmId, userId);
+    }
 }

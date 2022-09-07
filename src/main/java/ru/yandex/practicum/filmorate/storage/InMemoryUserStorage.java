@@ -20,6 +20,7 @@ public class InMemoryUserStorage implements UserStorage {
         generateAndSetId(user);
         setNameToLoginIfNameIsEmpty(user);
         setEmptyFriendsIfNull(user);
+        setEmptyLikedFilmsIfNull(user);
         users.put(user.getId(), user);
         log.info("{} was added", user);
         return user;
@@ -46,6 +47,12 @@ public class InMemoryUserStorage implements UserStorage {
         }
     }
 
+    private void setEmptyLikedFilmsIfNull(User user) {
+        if (user.getLikedFilmsId() == null) {
+            user.setLikedFilmsId(new HashSet<>(Set.of()));
+        }
+    }
+
     @Override
     public User removeUserById(int userId) {
         validateUserId(userId, users.keySet());
@@ -59,6 +66,7 @@ public class InMemoryUserStorage implements UserStorage {
         validateUserId(user.getId(), users.keySet());
         setNameToLoginIfNameIsEmpty(user);
         setEmptyFriendsIfNull(user);
+        setEmptyLikedFilmsIfNull(user);
         users.put(user.getId(), user);
         log.info("{} was updated", user);
         return user;
