@@ -31,4 +31,12 @@ public class FilmService {
     public List<Film> getFilms() {
         return filmStorage.getFilms();
     }
+
+    public Film getFilmById(int filmId) {
+        return filmStorage.getFilmById(filmId);
+    }
+
+    public void likeFilm(int filmId, int userId) {
+        filmStorage.likeFilm(filmId, userId);
+    }
 }
