@@ -26,4 +26,7 @@ public class User {
     @ToString.Exclude
     @JsonIgnore
     private Set<Integer> friendsId;
+    @ToString.Exclude
+    @JsonIgnore
+    private Set<Integer> likedFilmsId;
 }

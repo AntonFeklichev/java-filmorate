@@ -12,4 +12,8 @@ public interface FilmStorage {
     Film updateFilm(Film film);
 
     List<Film> getFilms();
+
+    Film getFilmById(int filmId);
+
+    void likeFilm(int filmId, int userId);
 }
