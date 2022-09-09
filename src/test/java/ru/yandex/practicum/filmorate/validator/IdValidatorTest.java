@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.validator;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.exception.UnknownUserException;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 
 import java.util.Set;
 
@@ -19,9 +19,9 @@ public class IdValidatorTest {
     @Test
     public void shouldThrowUnknownUserException() {
         final int invalidIdForUpdating = 10;
-        Exception ex = Assertions.assertThrows(UnknownUserException.class,
+        Exception ex = Assertions.assertThrows(UserNotFoundException.class,
                 () -> IdValidator.validateUserId(invalidIdForUpdating, setOfId),
-                "UnknownUserException is not thrown but id is not correct");
+                "UserNotFoundException is not thrown but id is not correct");
         Assertions.assertEquals(String.format("Unknown user: %d", invalidIdForUpdating), ex.getMessage());
     }
 }
