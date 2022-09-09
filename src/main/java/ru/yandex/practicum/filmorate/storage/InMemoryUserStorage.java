@@ -125,4 +125,9 @@ public class InMemoryUserStorage implements UserStorage {
         List<User> commonFriends = friendsOfUser1.stream().filter(friendOfUser1 -> friendsOfUser2.contains(friendOfUser1)).collect(Collectors.toList());
         return commonFriends;
     }
+
+    @Override
+    public Set<Integer> getUsersId() {
+        return users.keySet();
+    }
 }
