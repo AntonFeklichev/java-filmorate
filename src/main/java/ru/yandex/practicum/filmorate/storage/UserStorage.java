@@ -8,7 +8,7 @@ import java.util.Set;
 public interface UserStorage {
     User addUser(User user);
 
-    User removeUserById(int userId);
+    boolean removeUserById(int userId);
 
     User updateUser(User user);
 

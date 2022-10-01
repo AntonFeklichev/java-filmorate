@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.impl.inMemory;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
@@ -21,7 +22,10 @@ public class InMemoryFilmStorage implements FilmStorage {
     private Map<Integer, Film> films = new HashMap<>();
 
     @Autowired
-    public InMemoryFilmStorage(UserStorage userStorage) {
+    public InMemoryFilmStorage(
+            @Qualifier("databaseUserStorage")
+            UserStorage userStorage
+    ) {
         this.userStorage = userStorage;
     }
 

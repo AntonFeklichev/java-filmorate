@@ -6,15 +6,15 @@ CREATE TABLE IF NOT EXISTS users
     email    VARCHAR(255) UNIQUE,
     login    VARCHAR(255) UNIQUE,
     name     VARCHAR(255),
-    birthday TIMESTAMP
+    birthday DATE
 );
 
 DROP TABLE IF EXISTS users_friends CASCADE;
 
 CREATE TABLE IF NOT EXISTS users_friends
 (
-    user_id    INTEGER REFERENCES users,
-    friends_id INTEGER REFERENCES users,
+    user_id    INTEGER REFERENCES users ON DELETE CASCADE ,
+    friends_id INTEGER REFERENCES users ON DELETE CASCADE ,
     CONSTRAINT user_is_not_its_friend
         CHECK user_id != friends_id
 );
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS films
     title        VARCHAR(255) UNIQUE,
     description  VARCHAR(2047),
     duration     INTEGER,
-    release_date TIMESTAMP,
+    release_date DATE,
     mpa          INTEGER REFERENCES mpa
         CONSTRAINT positive_duration
             CHECK duration > 0 OR duration IS NULL
