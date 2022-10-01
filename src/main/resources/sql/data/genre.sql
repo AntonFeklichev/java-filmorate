@@ -1,0 +1,17 @@
+INSERT INTO GENRE (NAME)
+VALUES ('comedy');
+
+INSERT INTO GENRE (NAME)
+VALUES ('tragedy');
+
+INSERT INTO GENRE (NAME)
+VALUES ('action');
+
+INSERT INTO GENRE (NAME)
+VALUES ('sci_fi');
+
+INSERT INTO GENRE (NAME)
+VALUES ('documentary');
+
+INSERT INTO GENRE (NAME)
+VALUES ('cartoon');

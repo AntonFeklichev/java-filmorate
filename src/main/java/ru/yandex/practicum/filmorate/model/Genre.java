@@ -7,4 +7,5 @@ public enum Genre {
     SCI_FI,
     DOCUMENTARY,
     CARTOON
+
 }
