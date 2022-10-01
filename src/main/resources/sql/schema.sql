@@ -9,14 +9,14 @@ CREATE TABLE IF NOT EXISTS users
     birthday DATE
 );
 
-DROP TABLE IF EXISTS users_friends CASCADE;
+DROP TABLE IF EXISTS users_followers CASCADE;
 
-CREATE TABLE IF NOT EXISTS users_friends
+CREATE TABLE IF NOT EXISTS users_followers
 (
     user_id    INTEGER REFERENCES users ON DELETE CASCADE ,
-    friends_id INTEGER REFERENCES users ON DELETE CASCADE ,
-    CONSTRAINT user_is_not_its_friend
-        CHECK user_id != friends_id
+    follower_id INTEGER REFERENCES users ON DELETE CASCADE ,
+    CONSTRAINT user_is_not_its_follower
+        CHECK user_id != follower_id
 );
 
 DROP TABLE IF EXISTS mpa CASCADE;

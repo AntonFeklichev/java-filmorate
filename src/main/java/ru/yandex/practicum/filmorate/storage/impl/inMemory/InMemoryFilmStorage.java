@@ -23,7 +23,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Autowired
     public InMemoryFilmStorage(
-            @Qualifier("databaseUserStorage")
+            @Qualifier("userDbStorage")
             UserStorage userStorage
     ) {
         this.userStorage = userStorage;

@@ -18,8 +18,8 @@ import java.util.Set;
 
 @Repository
 @Slf4j
-@Qualifier("databaseUserStorage")
-public class DatabaseUserStorage implements UserStorage {
+@Qualifier("userDbStorage")
+public class UserDbStorage implements UserStorage {
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<User> userRowMapper = (rs, rowNum) -> {
@@ -34,7 +34,7 @@ public class DatabaseUserStorage implements UserStorage {
     };
 
     @Autowired
-    public DatabaseUserStorage(JdbcTemplate jdbcTemplate) {
+    public UserDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -105,23 +105,45 @@ public class DatabaseUserStorage implements UserStorage {
     }
 
     @Override
-    public void addFriend(int userId, int friendId) {
-
+    public void addFriend(int userId, int followerId) {
+        String sql = "INSERT INTO USERS_FOLLOWERS (USER_ID, FOLLOWER_ID) " +
+                "VALUES (?, ?)";
+        jdbcTemplate.update(sql, userId, followerId);
     }
 
     @Override
-    public User removeFriend(int userId, int friendId) {
-        return null;
+    public void removeFriend(int userId, int followerId) {
+        String sql = "DELETE FROM USERS_FOLLOWERS " +
+                "WHERE user_id = ? AND follower_id = ?";
+        jdbcTemplate.update(sql, userId, followerId);
     }
 
     @Override
     public List<User> getFriendsOfUserById(int userId) {
-        return null;
+        String sql = "SELECT * FROM users " +
+                "WHERE id IN (" +
+                "SELECT follower_id FROM users_followers " +
+                "WHERE user_id = ?)";
+        List<User> friends = jdbcTemplate.query(sql, userRowMapper, userId);
+        return friends;
     }
 
     @Override
     public List<User> getCommonFriendsOf(int user1Id, int user2Id) {
-        return null;
+        String sql = "SELECT *\n" +
+                "FROM USERS\n" +
+                "WHERE ID IN (\n" +
+                "    SELECT FOLLOWER_ID\n" +
+                "    FROM USERS_FOLLOWERS\n" +
+                "    WHERE USER_ID = ?\n" +
+                "    )\n" +
+                "  AND ID IN (\n" +
+                "    SELECT FOLLOWER_ID\n" +
+                "    FROM USERS_FOLLOWERS\n" +
+                "    WHERE USER_ID = ?\n" +
+                "    );";
+        List<User> commonFriends = jdbcTemplate.query(sql, userRowMapper, user1Id, user2Id);
+        return commonFriends;
     }
 
     @Override

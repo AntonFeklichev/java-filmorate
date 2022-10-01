@@ -22,7 +22,7 @@ public class UserService {
 
     @Autowired
     public UserService(
-            @Qualifier("databaseUserStorage")
+            @Qualifier("userDbStorage")
             UserStorage userStorage
     ) {
         this.userStorage = userStorage;
@@ -65,10 +65,10 @@ public class UserService {
         userStorage.addFriend(userId, friendId);
     }
 
-    public User removeFriend(int userId, int friendId) {
+    public void removeFriend(int userId, int friendId) {
         validateUserId(userId, userStorage.getUsersId());
         validateUserId(friendId, userStorage.getUsersId());
-        return userStorage.removeFriend(userId, friendId);
+        userStorage.removeFriend(userId, friendId);
     }
 
     public List<User> getFriendsOfUserById(int userId) {
