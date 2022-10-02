@@ -35,10 +35,12 @@ public class InMemoryFilmStorage implements FilmStorage {
         return film;
     }
 
-    public Film deleteFilm(Film film) {
-        films.remove(film.getId());
-        log.info("{} was removed", film);
-        return film;
+    public boolean removeFilmById(int filmId) {
+        boolean removed = films.remove(filmId) != null;
+        if (removed) {
+            log.info("film id={} was removed", filmId);
+        }
+        return removed;
     }
 
     public Film updateFilm(Film film) throws FilmNotFoundException {

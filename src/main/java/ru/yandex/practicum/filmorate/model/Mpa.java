@@ -1,9 +1,14 @@
 package ru.yandex.practicum.filmorate.model;
 
-public enum Mpa {
-    G,
-    PG,
-    PG_13,
-    R,
-    NC_17
+import lombok.Builder;
+import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
+
+@Data
+@Builder(toBuilder = true)
+public class Mpa {
+    private int id;
+    @NotBlank
+    private String name;
 }

@@ -23,7 +23,8 @@ public class FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
 
-    public FilmService(FilmStorage filmStorage,
+    public FilmService(@Qualifier("filmDbStorage")
+                       FilmStorage filmStorage,
                        @Qualifier("userDbStorage")
                        UserStorage userStorage) {
         this.filmStorage = filmStorage;
@@ -31,13 +32,14 @@ public class FilmService {
     }
 
     public Film addFilm(Film film) {
-        generateAndSetId(film);
+//        generateAndSetId(film);
         setEmptyLikedUsersIfNull(film);
+        log.info("{}", film);
         return filmStorage.addFilm(film);
     }
 
-    public Film deleteFilm(Film film) {
-        return filmStorage.deleteFilm(film);
+    public boolean removeFilmById(int filmId) {
+        return filmStorage.removeFilmById(filmId);
     }
 
     public Film updateFilm(Film film) {

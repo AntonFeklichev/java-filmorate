@@ -105,24 +105,24 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public void addFriend(int userId, int followerId) {
-        String sql = "INSERT INTO USERS_FOLLOWERS (USER_ID, FOLLOWER_ID) " +
+    public void addFriend(int userId, int friendId) {
+        String sql = "INSERT INTO users_friends (user_id, friend_id) " +
                 "VALUES (?, ?)";
-        jdbcTemplate.update(sql, userId, followerId);
+        jdbcTemplate.update(sql, userId, friendId);
     }
 
     @Override
-    public void removeFriend(int userId, int followerId) {
-        String sql = "DELETE FROM USERS_FOLLOWERS " +
-                "WHERE user_id = ? AND follower_id = ?";
-        jdbcTemplate.update(sql, userId, followerId);
+    public void removeFriend(int userId, int friendId) {
+        String sql = "DELETE FROM users_friends " +
+                "WHERE user_id = ? AND friend_id = ?";
+        jdbcTemplate.update(sql, userId, friendId);
     }
 
     @Override
     public List<User> getFriendsOfUserById(int userId) {
         String sql = "SELECT * FROM users " +
                 "WHERE id IN (" +
-                "SELECT follower_id FROM users_followers " +
+                "SELECT friend_id FROM users_friends " +
                 "WHERE user_id = ?)";
         List<User> friends = jdbcTemplate.query(sql, userRowMapper, userId);
         return friends;
@@ -131,16 +131,16 @@ public class UserDbStorage implements UserStorage {
     @Override
     public List<User> getCommonFriendsOf(int user1Id, int user2Id) {
         String sql = "SELECT *\n" +
-                "FROM USERS\n" +
-                "WHERE ID IN (\n" +
-                "    SELECT FOLLOWER_ID\n" +
-                "    FROM USERS_FOLLOWERS\n" +
-                "    WHERE USER_ID = ?\n" +
+                "FROM users\n" +
+                "WHERE id IN (\n" +
+                "    SELECT friend_id\n" +
+                "    FROM users_friends\n" +
+                "    WHERE user_id = ?\n" +
                 "    )\n" +
                 "  AND ID IN (\n" +
-                "    SELECT FOLLOWER_ID\n" +
-                "    FROM USERS_FOLLOWERS\n" +
-                "    WHERE USER_ID = ?\n" +
+                "    SELECT friend_id\n" +
+                "    FROM users_friends\n" +
+                "    WHERE user_id = ?\n" +
                 "    );";
         List<User> commonFriends = jdbcTemplate.query(sql, userRowMapper, user1Id, user2Id);
         return commonFriends;
@@ -148,7 +148,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public Set<Integer> getUsersId() {
-        String sql = "SELECT id FROM USERS";
+        String sql = "SELECT id FROM users";
         Set<Integer> usersId = new HashSet<>();
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql);
         while (rowSet.next()) {
