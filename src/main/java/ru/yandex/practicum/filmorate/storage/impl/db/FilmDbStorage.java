@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.MpaStorage;
@@ -26,6 +27,7 @@ import java.util.Set;
 public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
     private final MpaStorage mpaStorage;
+    private final GenreDbStorage genreStorage;
     private final RowMapper<Film> filmRowMapper = (rs, rowNum) -> {
         Film film = Film.builder()
                 .id(rs.getInt("id"))
@@ -34,14 +36,20 @@ public class FilmDbStorage implements FilmStorage {
                 .duration(rs.getInt("duration"))
                 .releaseDate(rs.getDate("release_date").toLocalDate())
                 .mpa(getMpaById(rs.getInt("mpa_id")))
+                .genres(getGenresByFilmId(rs.getInt("id")))
                 .build();
         return film;
     };
 
     @Autowired
-    public FilmDbStorage(JdbcTemplate jdbcTemplate, MpaStorage mpaStorage) {
+    public FilmDbStorage(JdbcTemplate jdbcTemplate, MpaStorage mpaStorage, GenreDbStorage genreStorage) {
         this.jdbcTemplate = jdbcTemplate;
         this.mpaStorage = mpaStorage;
+        this.genreStorage = genreStorage;
+    }
+
+    private Set<Genre> getGenresByFilmId(int id) {
+        return genreStorage.getByFilmId(id);
     }
 
     private Mpa getMpaById(int mpaId) {
@@ -63,10 +71,14 @@ public class FilmDbStorage implements FilmStorage {
             return ps;
         }, keyHolder);
         film.setId(keyHolder.getKey().intValue());
+        genreStorage.addGenresOfFilm(film);
+        film.setGenres(
+                getGenresByFilmId(film.getId())
+        );
         log.info("film id={} added successfully", film.getId());
-//        addGenre(film);
         return film;
     }
+
 
     @Override
     public boolean removeFilmById(int filmId) {
@@ -94,7 +106,10 @@ public class FilmDbStorage implements FilmStorage {
                 film.getMpa().getId(),
                 film.getId()
         );
-        if (rowsAffected > 0) {
+        genreStorage.addGenresOfFilm(film);
+        film.setGenres(
+                getGenresByFilmId(film.getId())
+        );        if (rowsAffected > 0) {
             log.info("film id={} was updated successfully", film.getId());
         }
         return film;

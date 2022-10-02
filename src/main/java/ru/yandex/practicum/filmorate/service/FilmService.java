@@ -32,7 +32,7 @@ public class FilmService {
     }
 
     public Film addFilm(Film film) {
-//        generateAndSetId(film);
+        generateAndSetId(film);
         setEmptyLikedUsersIfNull(film);
         log.info("{}", film);
         return filmStorage.addFilm(film);
