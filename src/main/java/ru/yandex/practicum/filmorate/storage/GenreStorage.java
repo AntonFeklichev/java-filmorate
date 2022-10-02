@@ -16,4 +16,6 @@ public interface GenreStorage {
     Set<Genre> getByFilmId(int id);
 
     void addGenresOfFilm(Film film);
+
+    void deleteGenresOfFilm(Film film);
 }

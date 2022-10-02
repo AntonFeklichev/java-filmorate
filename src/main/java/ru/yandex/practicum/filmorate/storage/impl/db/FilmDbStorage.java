@@ -13,6 +13,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.MpaStorage;
 
 import java.sql.Date;
@@ -27,7 +28,7 @@ import java.util.Set;
 public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
     private final MpaStorage mpaStorage;
-    private final GenreDbStorage genreStorage;
+    private final GenreStorage genreStorage;
     private final RowMapper<Film> filmRowMapper = (rs, rowNum) -> {
         Film film = Film.builder()
                 .id(rs.getInt("id"))
@@ -42,7 +43,7 @@ public class FilmDbStorage implements FilmStorage {
     };
 
     @Autowired
-    public FilmDbStorage(JdbcTemplate jdbcTemplate, MpaStorage mpaStorage, GenreDbStorage genreStorage) {
+    public FilmDbStorage(JdbcTemplate jdbcTemplate, MpaStorage mpaStorage, GenreStorage genreStorage) {
         this.jdbcTemplate = jdbcTemplate;
         this.mpaStorage = mpaStorage;
         this.genreStorage = genreStorage;
@@ -72,9 +73,6 @@ public class FilmDbStorage implements FilmStorage {
         }, keyHolder);
         film.setId(keyHolder.getKey().intValue());
         genreStorage.addGenresOfFilm(film);
-        film.setGenres(
-                getGenresByFilmId(film.getId())
-        );
         log.info("film id={} added successfully", film.getId());
         return film;
     }
@@ -97,7 +95,7 @@ public class FilmDbStorage implements FilmStorage {
         String sql = "UPDATE films " +
                 "SET name = ?, description = ?, duration = ?, release_date = ?, mpa_id = ? " +
                 "WHERE id = ?";
-        int rowsAffected = jdbcTemplate.update(
+        jdbcTemplate.update(
                 sql,
                 film.getName(),
                 film.getDescription(),
@@ -106,12 +104,12 @@ public class FilmDbStorage implements FilmStorage {
                 film.getMpa().getId(),
                 film.getId()
         );
+        genreStorage.deleteGenresOfFilm(film);
         genreStorage.addGenresOfFilm(film);
         film.setGenres(
-                getGenresByFilmId(film.getId())
-        );        if (rowsAffected > 0) {
-            log.info("film id={} was updated successfully", film.getId());
-        }
+                genreStorage.getByFilmId(film.getId())
+        );
+        log.info("film id={} was updated successfully", film.getId());
         return film;
     }
 

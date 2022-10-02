@@ -46,7 +46,7 @@ public class GenreDbStorage implements GenreStorage {
     @Override
     public List<Genre> getAll() {
         String sql = "SELECT * FROM genre " +
-                "ORDER BY ID ASC";
+                "ORDER BY id ASC";
         List<Genre> allGenres = jdbcTemplate.query(sql, genreRowMapper);
         return allGenres;
     }
@@ -66,7 +66,8 @@ public class GenreDbStorage implements GenreStorage {
     public Set<Genre> getByFilmId(int id) {
         String sql = "SELECT * FROM films_genres fg " +
                 "LEFT JOIN genre g on g.id = fg.genre_id " +
-                "WHERE fg.film_id = ?";
+                "WHERE fg.film_id = ? " +
+                "ORDER BY fg.genre_id ASC";
         Set<Genre> genresOfFilm = new HashSet<>(
                 jdbcTemplate.query(sql, genreRowMapper, id)
         );
@@ -94,5 +95,10 @@ public class GenreDbStorage implements GenreStorage {
                 });
             }
         }
+    }
+
+    public void deleteGenresOfFilm(Film film) {
+        String sql = "DELETE FROM films_genres WHERE film_id = ?";
+        jdbcTemplate.update(sql, film.getId());
     }
 }
