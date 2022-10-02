@@ -8,6 +8,8 @@ import ru.yandex.practicum.filmorate.storage.impl.MpaStorage;
 
 import java.util.List;
 
+import static ru.yandex.practicum.filmorate.validator.IdValidator.validateMpaId;
+
 @Service
 public class MpaService {
     private final MpaStorage mpaStorage;
@@ -23,7 +25,7 @@ public class MpaService {
     }
 
     public Mpa getById(int mpaId) {
-        //TODO:validate mpaId
+        validateMpaId(mpaId, mpaStorage.getAllId());
         return mpaStorage.getById(mpaId);
     }
 }
