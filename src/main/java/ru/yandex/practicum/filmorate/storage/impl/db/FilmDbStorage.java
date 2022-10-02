@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -12,7 +14,8 @@ import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.MpaStorage;
 
-import javax.validation.ValidationException;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +32,7 @@ public class FilmDbStorage implements FilmStorage {
                 .name(rs.getString("name"))
                 .description(rs.getString("description"))
                 .duration(rs.getInt("duration"))
-                .releaseDate(rs.getDate("release_date"))
+                .releaseDate(rs.getDate("release_date").toLocalDate())
                 .mpa(getMpaById(rs.getInt("mpa_id")))
                 .build();
         return film;
@@ -49,22 +52,20 @@ public class FilmDbStorage implements FilmStorage {
     public Film addFilm(Film film) {
         String sql = "INSERT INTO films (name, description, duration, release_date, mpa_id)" +
                 "VALUES (?, ?, ?, ?, ?)";
-        log.info("adding film: {}", film);
-        int rowsAffected = jdbcTemplate.update(
-                sql,
-                film.getName(),
-                film.getDescription(),
-                film.getDuration(),
-                film.getReleaseDate(),
-                film.getMpa().getId()
-        );
-        if (rowsAffected > 0) {
-            log.info("film id={} added successfully", film.getId());
-            return film;
-        } else {
-            log.info("error occurred");
-            throw new ValidationException();
-        }
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, film.getName());
+            ps.setString(2, film.getDescription());
+            ps.setInt(3, film.getDuration());
+            ps.setDate(4, Date.valueOf(film.getReleaseDate()));
+            ps.setInt(5, film.getMpa().getId());
+            return ps;
+        }, keyHolder);
+        film.setId(keyHolder.getKey().intValue());
+        log.info("film id={} added successfully", film.getId());
+//        addGenre(film);
+        return film;
     }
 
     @Override
@@ -90,7 +91,7 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDescription(),
                 film.getDuration(),
                 film.getReleaseDate(),
-                film.getMpa().getId(),
+//                film.getMpa().getId(),
                 film.getId()
         );
         return film;

@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Data
@@ -20,11 +20,12 @@ public class Film {
     @Size(max = 200, message = "Film description length should be less than 200 characters long")
     private String description;
     @ReleaseDateValidation
-    private Date releaseDate;
+    private LocalDate releaseDate;
     @Positive(message = "Film duration should be a positive number")
     private int duration;
     private Set<Integer> likedUsersId;
     private Set<Genre> genres;
     @NotNull
     private Mpa mpa;
+//    private int rate;
 }

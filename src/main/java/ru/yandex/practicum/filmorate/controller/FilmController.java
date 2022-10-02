@@ -44,7 +44,7 @@ public class FilmController {
 
     @DeleteMapping("/{filmId}")
     public boolean removeFilmById(@Valid @PathVariable
-                           int filmId) {
+                                  int filmId) {
         return filmService.removeFilmById(filmId);
 
     }
