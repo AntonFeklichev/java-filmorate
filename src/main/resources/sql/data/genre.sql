@@ -1,17 +1,17 @@
 INSERT INTO GENRE (NAME)
-VALUES ('comedy');
+VALUES ('Комедия');
 
 INSERT INTO GENRE (NAME)
-VALUES ('tragedy');
+VALUES ('Драма');
 
 INSERT INTO GENRE (NAME)
-VALUES ('action');
+VALUES ('Экшн');
 
 INSERT INTO GENRE (NAME)
-VALUES ('sci_fi');
+VALUES ('Научная фантастика');
 
 INSERT INTO GENRE (NAME)
-VALUES ('documentary');
+VALUES ('Документальный');
 
 INSERT INTO GENRE (NAME)
-VALUES ('cartoon');
+VALUES ('Мультфильм');

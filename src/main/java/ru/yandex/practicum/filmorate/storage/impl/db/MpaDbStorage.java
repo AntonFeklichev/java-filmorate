@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.storage.impl.MpaStorage;
+import ru.yandex.practicum.filmorate.storage.MpaStorage;
 
 import java.util.HashSet;
 import java.util.List;
