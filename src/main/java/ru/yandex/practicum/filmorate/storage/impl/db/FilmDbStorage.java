@@ -91,9 +91,12 @@ public class FilmDbStorage implements FilmStorage {
                 film.getDescription(),
                 film.getDuration(),
                 film.getReleaseDate(),
-//                film.getMpa().getId(),
+                film.getMpa().getId(),
                 film.getId()
         );
+        if (rowsAffected > 0) {
+            log.info("film id={} was updated successfully", film.getId());
+        }
         return film;
     }
 
@@ -108,31 +111,43 @@ public class FilmDbStorage implements FilmStorage {
     public Film getFilmById(int filmId) {
         String sql = "SELECT * FROM films " +
                 "WHERE id = ?";
-        log.info("GETTING BY ID");
-
         Film film = jdbcTemplate.queryForObject(sql, filmRowMapper, filmId);
-        log.info("GETTING BY ID");
         return film;
     }
 
     @Override
     public void likeFilm(int filmId, int userId) {
-
+        String sql = "INSERT INTO films_likes (film_id, liked_user_id) " +
+                "VALUES (?, ?)";
+        jdbcTemplate.update(sql, filmId, userId);
     }
 
     @Override
     public void deleteLikeOfFilm(int filmId, int userId) {
-
+        String sql = "DELETE FROM films_likes " +
+                "WHERE film_id = ? AND liked_user_id = ?";
+        jdbcTemplate.update(sql, filmId, userId);
     }
 
     @Override
     public List<Film> getPopularFilms(int count) {
-        return null;
+        String sql = "SELECT * FROM films " +
+                "LEFT JOIN (" +
+                "SELECT " +
+                "film_id," +
+                "COUNT(distinct liked_user_id) AS rate " +
+                "FROM films_likes " +
+                "GROUP BY film_id) " +
+                "AS popular ON films.id = popular.film_id " +
+                "ORDER BY popular.rate DESC " +
+                "LIMIT ?";
+        List<Film> popularFilms = jdbcTemplate.query(sql, filmRowMapper, count);
+        return popularFilms;
     }
 
     @Override
     public Set<Integer> getFilmsId() {
-        String sql = "SELECT id FROM  films";
+        String sql = "SELECT id FROM films";
         Set<Integer> filmsId = new HashSet<>();
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql);
         while (rowSet.next()) {

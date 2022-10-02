@@ -1,14 +1,6 @@
-INSERT INTO MPA (NAME)
-VALUES ('G');
-
-INSERT INTO MPA (NAME)
-VALUES ( 'PG' );
-
-INSERT INTO MPA (NAME)
-VALUES ( 'PG_13' );
-
-INSERT INTO MPA (NAME)
-VALUES ( 'R' );
-
-INSERT INTO MPA (NAME)
-VALUES ( 'R_17' );
+INSERT INTO mpa (name)
+VALUES ('G'),
+       ('PG'),
+       ('PG-13'),
+       ('R'),
+       ('NC-17');
