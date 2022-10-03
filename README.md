@@ -1,2 +1,3 @@
 # java-filmorate
-Template repository for Filmorate project.
+## Схема базы данных:
+![plot](./src/main/resources/java-filmorate database diagram.png)
