@@ -71,7 +71,6 @@ public class GenreDbStorage implements GenreStorage {
         Set<Genre> genresOfFilm = new HashSet<>(
                 jdbcTemplate.query(sql, genreRowMapper, id)
         );
-        log.info("GENRES: {}", genresOfFilm);
         return genresOfFilm;
     }
 
@@ -100,5 +99,6 @@ public class GenreDbStorage implements GenreStorage {
     public void deleteGenresOfFilm(Film film) {
         String sql = "DELETE FROM films_genres WHERE film_id = ?";
         jdbcTemplate.update(sql, film.getId());
+        log.info("genres of film id={} were deleted from db", film.getId());
     }
 }

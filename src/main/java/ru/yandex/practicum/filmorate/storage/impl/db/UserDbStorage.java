@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import javax.validation.ValidationException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,18 +42,14 @@ public class UserDbStorage implements UserStorage {
     public User addUser(User user) {
         String sql = "INSERT INTO USERS (EMAIL, LOGIN, NAME, BIRTHDAY) " +
                 "VALUES (?, ?, ?, ?)";
-        int affectedRows = jdbcTemplate.update(
+        jdbcTemplate.update(
                 sql,
                 user.getEmail(),
                 user.getLogin(),
                 user.getName(),
                 user.getBirthday()
         );
-        if (affectedRows > 0) {
-            return user;
-        } else {
-            throw new ValidationException();
-        }
+        return user;
     }
 
     @Override
@@ -62,10 +57,10 @@ public class UserDbStorage implements UserStorage {
         String sql = "DELETE FROM USERS WHERE id = ?";
         int rowsAffected = jdbcTemplate.update(sql, userId);
         if (rowsAffected > 0) {
-            log.info("User id={} was removed", userId);
+            log.info("user id={} was removed", userId);
             return true;
         } else {
-            throw new UserNotFoundException("Unknown user: id=" + userId);
+            throw new UserNotFoundException("unknown user: id=" + userId);
         }
     }
 
@@ -74,19 +69,15 @@ public class UserDbStorage implements UserStorage {
         String sql = "UPDATE users " +
                 "SET email = ?, login = ?, name = ?, birthday = ? " +
                 "WHERE id = ?";
-        int rowsAffected = jdbcTemplate.update(
+        jdbcTemplate.update(
                 sql,
                 user.getEmail(),
                 user.getLogin(),
                 user.getName(),
                 user.getBirthday(),
                 user.getId());
-        if (rowsAffected > 0) {
-            log.info("user id=? was updated successfully");
-            return user;
-        } else {
-            throw new ValidationException();
-        }
+        log.info("user id={} was updated successfully", user.getId());
+        return user;
     }
 
     @Override
@@ -100,7 +91,6 @@ public class UserDbStorage implements UserStorage {
     public User getUserById(int id) {
         String sql = "SELECT * FROM users WHERE id = ?";
         User user = jdbcTemplate.query(sql, userRowMapper, id).get(0);
-        log.info("found user id={}", id);
         return user;
     }
 
@@ -109,6 +99,7 @@ public class UserDbStorage implements UserStorage {
         String sql = "INSERT INTO users_friends (user_id, friend_id) " +
                 "VALUES (?, ?)";
         jdbcTemplate.update(sql, userId, friendId);
+        log.info("user id={} added friend user id={}", userId, friendId);
     }
 
     @Override
@@ -116,6 +107,7 @@ public class UserDbStorage implements UserStorage {
         String sql = "DELETE FROM users_friends " +
                 "WHERE user_id = ? AND friend_id = ?";
         jdbcTemplate.update(sql, userId, friendId);
+        log.info("user id={} is not friend of user id={} anymore", userId, friendId);
     }
 
     @Override

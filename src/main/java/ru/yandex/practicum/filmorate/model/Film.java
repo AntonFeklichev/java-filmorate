@@ -27,5 +27,4 @@ public class Film {
     private Set<Genre> genres;
     @NotNull
     private Mpa mpa;
-//    private int rate;
 }

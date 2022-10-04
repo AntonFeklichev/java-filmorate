@@ -34,7 +34,6 @@ public class FilmService {
     public Film addFilm(Film film) {
         generateAndSetId(film);
         setEmptyLikedUsersIfNull(film);
-        log.info("{}", film);
         return filmStorage.addFilm(film);
     }
 
@@ -81,6 +80,5 @@ public class FilmService {
 
     private void generateAndSetId(Film film) {
         film.setId(idForNewFilms++);
-        log.debug("id = {} was generated", film.getId());
     }
 }
