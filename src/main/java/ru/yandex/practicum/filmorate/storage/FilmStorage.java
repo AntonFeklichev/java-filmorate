@@ -8,7 +8,7 @@ import java.util.Set;
 public interface FilmStorage {
     Film addFilm(Film film);
 
-    Film deleteFilm(Film film);
+    boolean removeFilmById(int filmId);
 
     Film updateFilm(Film film);
 

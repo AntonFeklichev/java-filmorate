@@ -8,7 +8,7 @@ import java.util.Set;
 public interface UserStorage {
     User addUser(User user);
 
-    User removeUserById(int userId);
+    boolean removeUserById(int userId);
 
     User updateUser(User user);
 
@@ -18,7 +18,7 @@ public interface UserStorage {
 
     void addFriend(int userId, int friendId);
 
-    User removeFriend(int userId, int friendId);
+    void removeFriend(int userId, int friendId);
 
     List<User> getFriendsOfUserById(int userId);
 

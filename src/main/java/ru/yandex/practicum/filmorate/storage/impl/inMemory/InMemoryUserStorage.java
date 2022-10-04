@@ -1,8 +1,10 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.impl.inMemory;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,10 +23,14 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User removeUserById(int userId) {
+    public boolean removeUserById(int userId) {
         User removedUser = users.remove(userId);
-        log.info("{} was removed", removedUser);
-        return removedUser;
+        if (removedUser == null) {
+            throw new UserNotFoundException("Unknown user: id=" + userId);
+        } else {
+            log.info("{} was removed", removedUser);
+            return true;
+        }
     }
 
     @Override
@@ -55,14 +61,13 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User removeFriend(int userId, int friendId) {
+    public void removeFriend(int userId, int friendId) {
         User user = getUserById(userId);
         User friend = getUserById(friendId);
         user.getFriendsId().remove(friendId);
         log.info("{} is not friend of {} anymore", friend, user);
         friend.getFriendsId().remove(userId);
         log.info("{} is not friend of {} anymore", user, friend);
-        return friend;
     }
 
     @Override
